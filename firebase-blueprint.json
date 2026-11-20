@@ -13,7 +13,7 @@
         },
         "category": {
           "type": "string",
-          "enum": ["사진 합성", "스타일 변환", "캐릭터·포스터"],
+          "enum": ["사진 합성", "스타일 변환", "캐릭터·포스터", "증명사진"],
           "description": "The category of the prompt"
         },
         "content": {

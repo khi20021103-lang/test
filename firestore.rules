@@ -30,7 +30,7 @@ service cloud.firestore {
     }
 
     function isValidCategory(category) {
-      return category in ['사진 합성', '스타일 변환', '캐릭터·포스터'];
+      return category in ['사진 합성', '스타일 변환', '캐릭터·포스터', '증명사진'];
     }
 
     function isValidPrompt(data) {

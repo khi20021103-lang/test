@@ -1206,6 +1206,9 @@
             <button type="button" class="category-btn" data-category="캐릭터·포스터" role="tab" aria-selected="false">
               <span aria-hidden="true">✨</span> 캐릭터·포스터
             </button>
+            <button type="button" class="category-btn" data-category="증명사진" role="tab" aria-selected="false">
+              <span aria-hidden="true">🪪</span> 증명사진
+            </button>
           </div>
           <div id="resultSummary" class="result-summary tabular-nums">불러오는 중...</div>
         </div>
@@ -1282,6 +1285,7 @@
               <option value="사진 합성">🪄 사진 합성</option>
               <option value="스타일 변환">🎨 스타일 변환</option>
               <option value="캐릭터·포스터">✨ 캐릭터·포스터</option>
+              <option value="증명사진">🪪 증명사진</option>
             </select>
           </div>
 
@@ -1384,8 +1388,44 @@
       const CATEGORY_EMOJI = {
         '사진 합성': '🪄',
         '스타일 변환': '🎨',
-        '캐릭터·포스터': '✨'
+        '캐릭터·포스터': '✨',
+        '증명사진': '🪪'
       };
+
+      const ID_PHOTO_PROMPT_DATA = {
+        title: '증명사진 및 여권사진 규격 전문가',
+        category: '증명사진',
+        content: `당신은 증명사진 및 여권사진 규격 전문가이자 이미지 생성 AI입니다. 제가 첨부하는 인물 사진을 바탕으로 선택한 용도에 맞는 증명사진을 생성해 주세요.
+
+[1단계: 필수 입력 확인 및 사전 동의 절차]
+1. 제가 아직 사진을 첨부하지 않았거나 선택지를 고르지 않았다면, 먼저 아래 내용을 안내해 주세요.
+   - "얼굴이 뚜렷하고 머리와 어깨가 보이는 정면 사진을 첨부해 주세요."
+   - "원하시는 사진 종류를 선택해 주세요: ① 여권사진 ② 반명함판 ③ 명함판 ④ 증명사진"
+2. 제가 사진 첨부와 종류 선택을 완료하면, 이미지를 바로 생성하지 말고 반드시 아래 주의사항을 먼저 안내해 주세요.
+   - "⚠️ 주의사항: 외교부 및 공공기관 공식 서류 제출 시 AI로 편집·합성한 사진은 규격 미달 또는 위변조 사유로 반려되어 인정되지 않을 수 있습니다."
+   - "그래도 참고용 이미지를 제작할까요?"
+3. 제가 "네", "진행해 주세요", "승인" 등 제작에 동의하는 답변을 한 경우에만 2단계 규칙에 따라 이미지를 생성해 주세요.
+
+[2단계: 이미지 생성 및 편집 규칙]
+- 인물 보존: 첨부된 원본 사진 속 인물의 이목구비, 얼굴형, 피부톤, 헤어스타일, 고유한 얼굴 특징은 왜곡이나 과도한 보정 없이 자연스럽게 그대로 유지합니다.
+- 의상 변경: 의상은 깔끔하고 단정한 비즈니스 정장(어두운 계열 재킷과 셔츠 또는 블라우스) 차림으로 자연스럽게 변경합니다.
+- 선택 종류별 규격 및 배경 설정:
+  1) 여권사진 선택 시 (대한민국 외교부 여권사진 규격 엄수):
+     - 비율 및 크롭: 가로 3.5cm × 세로 4.5cm 비율. 정수리부터 턱까지 얼굴 길이가 사진 세로 길이의 약 70~80%(3.2~3.6cm 비율)를 차지하도록 상반신(어깨선 포함)을 정면으로 크롭합니다.
+     - 배경: 테두리나 그림자, 무늬가 전혀 없는 순수한 흰색 배경(Pure white background)으로 설정합니다.
+     - 표정 및 자세: 입을 다물고 웃지 않는 무표정(자연스러운 정면 응시), 고개가 기울어지지 않은 정면 자세를 유지합니다. 양쪽 눈썹과 귀 윤곽이 머리카락에 가려지지 않고 선명하게 보이도록 정리하며, 안경테가 눈을 가리거나 빛 반사가 생기지 않게 처리합니다.
+  2) 반명함판 선택 시:
+     - 비율 및 크롭: 가로 3cm × 세로 4cm 비율. 어깨선과 가슴 윗부분이 나오는 단정한 상반신 구도로 크롭합니다.
+     - 배경: 깔끔한 흰색 또는 아주 연한 하늘색/밝은 회색 단색 배경으로 설정합니다.
+  3) 명함판 선택 시:
+     - 비율 및 크롭: 가로 5cm × 세로 7cm 비율. 여유 있는 상반신 구도로 크롭합니다.
+     - 배경: 깔끔한 단색 스튜디오 배경(흰색 또는 연한 회색)으로 설정합니다.
+  4) 증명사진 선택 시:
+     - 비율 및 크롭: 가로 2.5cm × 세로 3cm 비율. 얼굴과 어깨가 중심에 오도록 상반신 구도로 크롭합니다.
+     - 배경: 깔끔한 흰색 또는 밝은 단색 배경으로 설정합니다.
+- 공통 화질 조건: 스튜디오에서 전문 조명으로 촬영한 것처럼 얼굴에 그늘이나 그림자가 지지 않게 고르고 화사한 조명을 적용하며, 인쇄가 가능할 정도의 선명한 고화질 사진으로 출력합니다.`
+      };
+      let isAddingIdPhotoPrompt = false;
 
       // Structured Firestore error handler
       const OperationType = {
@@ -2117,6 +2157,7 @@
           if (email === ADMIN_EMAIL && user.emailVerified) {
             state.isAdmin = true;
             state.adminEmail = user.email;
+            maybeSaveIdPhotoPromptAsAdmin();
           } else {
             state.isAdmin = false;
             state.adminEmail = null;
@@ -2218,6 +2259,7 @@
               state.isLoading = false;
               hideError();
               renderPrompts();
+              maybeSaveIdPhotoPromptAsAdmin();
             },
             (err) => {
               handleFirestoreError(err, OperationType.LIST, PROMPTS_COLLECTION);
@@ -2230,6 +2272,32 @@
           state.isLoading = false;
           showError('저장소와 연결하는 데 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.');
           renderPrompts();
+        }
+      }
+
+      async function maybeSaveIdPhotoPromptAsAdmin() {
+        if (!state.isAdmin || state.isLoading || isAddingIdPhotoPrompt) return;
+        const alreadyExists = state.prompts.some((item) => item.category === '증명사진');
+        if (alreadyExists) {
+          localStorage.setItem('id_photo_prompt_added_v1', '1');
+          return;
+        }
+        if (localStorage.getItem('id_photo_prompt_added_v1') === '1') return;
+
+        isAddingIdPhotoPrompt = true;
+        try {
+          await addDoc(collection(db, PROMPTS_COLLECTION), {
+            title: ID_PHOTO_PROMPT_DATA.title,
+            category: ID_PHOTO_PROMPT_DATA.category,
+            content: ID_PHOTO_PROMPT_DATA.content,
+            createdAt: serverTimestamp()
+          });
+          localStorage.setItem('id_photo_prompt_added_v1', '1');
+          showToast('증명사진 프롬프트가 추가됐어요!');
+        } catch (err) {
+          handleFirestoreError(err, OperationType.CREATE, PROMPTS_COLLECTION);
+        } finally {
+          isAddingIdPhotoPrompt = false;
         }
       }
 
